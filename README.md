@@ -30,6 +30,6 @@ https://github.com/jeffreybreen/twitter-sentiment-analysis-tutorial-201107/blob/
 
 ## Sketches
 
-![Visualization](Retail Coffee Marketplace.jpg)
+![Visualization](Retail_Coffee_Marketplace.jpg)
 
 ![data](datavisualization.jpg)
