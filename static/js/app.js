@@ -1,41 +1,96 @@
    // Plot Tweets Count and publish in tweets div 
-  function buildTweets(sample) {
+  function buildTweets(company) {
 
-      // @TODO: Complete the following function that builds the metadata panel
+    console.log(`Company Selected in buildTweets : ` + company); 
   
-      // Use `d3.json` to fetch the metadata for a sample
-      // Use d3 to select the panel with id of `#sample-metadata`
+    url=`/tweets/`+company;
   
-      console.log(`Sample Data : ` + sample); 
+    console.log(url);
   
-      url=`/metadata/`+sample;
+    d3.json(url).then(function(data){
   
-      console.log(url);
+      console.log(data);
+        
+      var data2 = [{
+        x: data["sentiments"],
+        y: data["ratings"], 
+        hovertext: data["company"],
+        type: "bar"
+      }];
+    
+      var layout2={ title: '<b>Bar Chart - </b> Sentiments'};
+    
+      Plotly.newPlot('tweets', data2, layout2); 
   
-      var metadata = d3.select('#sample-metadata');
+  });
+}
+
+   // Plot Tweets Count and publish in tweets div 
+function buildReTweets(company) {
+
+    console.log(`Company Selected in buildReTweets : ` + company); 
   
-      d3.json(url).then(function(data){
+    url=`/retweets/`+company;
   
-        d3.select('#sample-metadata').selectAll("h5").remove();  
-        Object.entries(data).forEach(([key, value]) =>  d3.select('#sample-metadata').append("h5").text( key + ' : ' + value ) );
+    console.log(url);
   
-      });  
+    d3.json(url).then(function(data){
   
-  }
-  
+      console.log(data);
+        
+      // var data2 = [{
+      //   x: data["sentiments"],
+      //   y: data["retweets"], 
+      //   hovertext: data["company"],
+      //   type: "bar"
+      // }];
+    
+      // var layout2={ title: '<b>Bar Chart - </b> Retweets'};
+    
+
+
+              
+      var data2 = [{
+        values: data["retweets"],       
+        labels: data["sentiments"],
+        hovertext: data["company"],
+        type: "pie"
+      }];
+    
+      var layout2={ title: '<b>Pie Chart - </b> Retweets'};
+      
+      Plotly.newPlot('retweets', data2, layout2); 
+
+  });
+}
   // Get Sample Tweets and disply on dashboard
   function buildMetadata(company) {
 
       console.log(`Company Selected in buildMetadata : ` + company); 
 
       url=`/metadata/`+company;
-  
+
+      if (company == "SB"){
+          v_company = "Starbucks"
+      }
+      else if (company == "MD") {
+          v_company = "McDonald's"
+      }
+      else if (company == "DD"){
+          v_company = "Dunkin Donuts"
+      }
+      
       console.log(url);
   
       var metadata = d3.select('#recent-tweets');
-  
+
+
+
       d3.json(url).then(function(data){
-  
+        
+        d3.select('#company-head').selectAll("h3").remove();
+        d3.select('#company-head').append("h3").text(v_company);
+
         d3.select('#recent-tweets').selectAll("h5").remove();  
         Object.entries(data).forEach(([key, value]) =>  d3.select('#recent-tweets').append("h5").text( key + ' : ' + value ) );
   
@@ -70,86 +125,62 @@
   }); 
   
   }
-    
-  // Plot Stores Counts and publish in stores div 
-  function buildStores(sample) {
   
-    // @TODO: Use `d3.json` to fetch the sample data for the plots
-  
-      // @TODO: Build a Bubble Chart using the sample data
-  
-      url=`/samples/`+sample;
-  
-      d3.json(url).then(function(data){      
-              
-        var data1 = [{
-          x: data["otu_ids"],
-          y: data["sample_values"],
-          mode: 'markers',
-          marker: {
-            size: data["sample_values"],
-            color: data["otu_ids"],
-            text: data["otu_labels"]
-          }
-        }];
-        
-        var layout1={ title: '<b>Bubble Chart</b> <br> Sample Values'};            
-  
-        Plotly.newPlot('bubble', data1, layout1);
-  
-        var data2 = [{
-          values: data["sample_values"].slice(0,10),       
-          labels: data["otu_ids"].slice(0,10),
-          hovertext: data["otu_labels"].slice(0,10),
-          type: "pie"
-        }];
-      
-        var layout2={ title: '<b>Pie Chart</b> <br> Sample Values'};
-      
-        Plotly.newPlot('pie', data2, layout2);  
-      });
-      
-  }
+// Plot Stores Counts and Revenues
+function buildStores(company) {
 
-  // Plot Sales Counts and publish in sales div 
-  function buildSales(sample) {
+
+
+    url=`/sales/`+company;
+
+    d3.json(url).then(function(data){
+
+      // Bubble Chart
+      var trace1 = {
+        x: data['year'],
+        y: data['stores'],
+        mode: 'markers',
+        marker: {
+            size: data['stores'].map(function(point){
+              return parseFloat(point)/150}),
+            color: data['stores']
+            }
+      };
+
+      var data1 = [trace1];
+
+      var layout = {
+        title: "US Stores",
+        xaxis: { title: "Year"},
+        yaxis: { title: "Number of US Stores"},
+        showlegend: false,
+        height: 600,
+        width: 600
+      };
+
+      Plotly.newPlot("stores", data1, layout);
+
+      // Bar Chart
+
+      var trace2 = {
+        x: data['year'],
+        y: data['revenue'],
+        type: "bar"
+      };
+
+      var data2 = [trace2];
+
+      var layout1 = {
+        title: "US Revenues",
+        xaxis: { title: "Year"},
+        yaxis: { title: "Revenue in Millions of Dollars"}
+      };
+
+      Plotly.newPlot("sales", data2, layout1);
+    });
+
+}
   
-    // @TODO: Use `d3.json` to fetch the sample data for the plots
-  
-      // @TODO: Build a Bubble Chart using the sample data
-  
-      url=`/samples/`+sample;
-  
-      d3.json(url).then(function(data){      
-              
-        var data1 = [{
-          x: data["otu_ids"],
-          y: data["sample_values"],
-          mode: 'markers',
-          marker: {
-            size: data["sample_values"],
-            color: data["otu_ids"],
-            text: data["otu_labels"]
-          }
-        }];
-        
-        var layout1={ title: '<b>Bubble Chart</b> <br> Sample Values'};            
-  
-        Plotly.newPlot('bubble', data1, layout1);
-  
-        var data2 = [{
-          values: data["sample_values"].slice(0,10),       
-          labels: data["otu_ids"].slice(0,10),
-          hovertext: data["otu_labels"].slice(0,10),
-          type: "pie"
-        }];
-      
-        var layout2={ title: '<b>Pie Chart</b> <br> Sample Values'};
-      
-        Plotly.newPlot('pie', data2, layout2);  
-      });
-      
-  }
   
   function init() {
 
@@ -159,9 +190,8 @@
   
     var companies = [ 
                       {"company" : "SB" },  
-                      {"company" : "MC" }, 
-                      {"company" : "DD" },
-                      {"company" : "All"} 
+                      {"company" : "MD" }, 
+                      {"company" : "DD" }
                     ] 
              
     var arrayLength = companies.length;
@@ -178,7 +208,8 @@
 
       // Use the first Company (Starbucks) from the list to build the initial plots
       const firstSample = companies[0].company;
-//       buildTweets(firstSample);
+      buildTweets(firstSample);
+      buildReTweets(firstSample);
       buildMetadata(firstSample);
       buildRating(firstSample);
 //       buildStores(firstSample);
@@ -188,7 +219,8 @@
   
   function optionChanged(newSample) {
 //     // Fetch new data each time a new sample is selected
-//       buildTweets(newSample);
+      buildTweets(newSample);
+      buildReTweets(newSample);
       buildMetadata(newSample);
       buildRating(newSample);
 //       buildStores(newSample);
