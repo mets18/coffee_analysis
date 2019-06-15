@@ -45,7 +45,6 @@ v_count = 1000
 v_geo_code = [40.7128, -74.0060, "5000mi"]
 v_sentiment=""
 
-# Loop through the search lists and date range to scrape tweets
 for x in search_list:
 
   for v_strt_dt in date_arr:
@@ -83,6 +82,8 @@ for x in search_list:
                     'search_str': query,
                     'tweet_id': tweet.id,
                     'tweet_text': tweet.text,
+                    'retweet_count': tweet.retweet_count,
+                    'source' : tweet.source,
                     'favourite_count' : tweet.user.favourites_count,
                     'sentiment' : v_sentiment
                 }
@@ -91,7 +92,7 @@ for x in search_list:
 
             except Exception as e:
                 print(e)
-
+        #print(tweet.id);
 
 ##Checking the load into mongo db
 
