@@ -7,6 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Chain Coffee Shops</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
   <link rel="icon" href="data:,">
 </head>
 
@@ -19,12 +20,25 @@
         <p>Use the interactive charts below to explore the companies</p>
       </div>
     </div>
-    <div class="row">
+    <div class="row"></div>
       <div class="col-md-2">
+          <div class="well">
+            <h5>Select Company:</h5>
+            <select id="selDataset" onchange="optionChanged(this.value)"></select>
+          </div>
+      </div>
+      <div class="col-md-10  text-center">
+          <div id="company-head" class="panel-body"> </div>
+      </div>
+    </div>
+    <div class="row">
+     <!--
+      <div class="col-md-1">
         <div class="well">
           <h5>Select Company:</h5>
           <select id="selDataset" onchange="optionChanged(this.value)"></select>
         </div>
+
         <div class="panel panel-primary">
           <div class="panel-heading">
             <h3 class="panel-title">Recent Tweets</h3>
@@ -32,12 +46,37 @@
           <div id="recent-tweets" class="panel-body"> </div>
             <h5></h5>
         </div>
+      -->
       </div>
+      <div class="col-md-1"> </div>
+      <div class="col-md-11">
+
+            <div class="panel panel-primary">
+              <div class="panel-heading">
+                <h3 class="panel-title">Recent Tweets</h3>
+              </div>
+              <div id="recent-tweets" class="panel-body"> </div>
+                <h5></h5>
+            </div>
+      </div>
+    </div>
+    <div class="row"></div>
+      <div class="col-md-2">
+        
+      </div>      
       <div class="col-md-5">
         <div id="tweets"></div>
       </div>
       <div class="col-md-5">
         <div id="rating"></div>
+      </div>
+    </div>
+    <div class="row"></div>
+      <div class="col-md-2">
+        
+      </div>
+      <div class="col-md-5">
+        <div id="retweets"></div>
       </div>
     </div>
   </div>
