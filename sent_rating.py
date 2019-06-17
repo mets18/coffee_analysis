@@ -97,13 +97,13 @@ def get_rating(tw_js):
             
     if ( n_count < p_count):
         print ("Positive Tweet : " + str(p_count))
-        return ("+")
+        return ("Positive")
     elif ( n_count > p_count):
         print ("Negative Tweet : " + str(n_count))
-        return ("-")
+        return ("Negative")
     elif (n_count == p_count ):
         print ("Neutral Tweet : " + " Positive : " +  str(p_count) + " Negative : " + str(n_count) )
-        return ("0")      
+        return ("Neutral")      
     
 if __name__ == "__main__":    
     get_rating(str(sys.argv[1]))
