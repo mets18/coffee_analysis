@@ -74,10 +74,10 @@ def get_rating(tw_js):
     p_count = 0
     
     n_data = load_neg_words()    
-    print("Number of Negative words : " + str(len(n_data)))
+    #print("Number of Negative words : " + str(len(n_data)))
     
     p_data = load_pos_words()    
-    print("Number of Positive words : " + str(len(p_data)))
+    #print("Number of Positive words : " + str(len(p_data)))
     
     #print("Analyzing Sentence : " + tw_js)
     tw_js = cleanse_text(tw_js)    
