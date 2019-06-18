@@ -29,7 +29,8 @@ def rating(cmp):
     tweets_rec = list(mongo.db.tweets.aggregate(
                  [ 
                     { "$match": { 'id': cmp } },
-                    { "$group": { '_id': "$sentiment" , "No_of_Times": { "$sum": 1 } } }
+                    { "$group": { '_id': "$sentiment" , "No_of_Times": { "$sum": 1 } } },
+                    { "$sort" : { '_id' : -1 } }
                  ]
         ))
 
@@ -47,6 +48,7 @@ def rating(cmp):
                    }
 
     #Return json 
+    print(return_json)
     return jsonify(return_json)
 
 # Route that will return aggregated tweet counts
@@ -57,7 +59,8 @@ def tweets(cmp):
     tweets_rec = list(mongo.db.tweets.aggregate(
                  [ 
                     { "$match": { 'id': cmp } },
-                    { "$group": { '_id': "$sentiment" , "No_of_Times": { "$sum": 1 } } }
+                    { "$group": { '_id': "$sentiment" , "No_of_Times": { "$sum": 1 } } },
+                    { "$sort" : { '_id' : -1 } }
                  ]
         ))
 
@@ -84,7 +87,8 @@ def retweets(cmp):
     retweets_rec = list(mongo.db.tweets.aggregate(
                  [ 
                     { "$match": { 'id': cmp } },
-                    { "$group": { "_id": "$sentiment", "No_of_Times": { "$sum": "$retweet_count" } } }
+                    { "$group": { "_id": "$sentiment", "No_of_Times": { "$sum": "$retweet_count" } } },
+                    { "$sort" : { '_id' : -1 } }
                  ]
         ))
 
@@ -100,7 +104,7 @@ def retweets(cmp):
                      "sentiments" : sentiments_list, 
                      "retweets" : retweet_list
                    }
-    print(return_json)
+    #print(return_json)
     #Return json 
     return jsonify(return_json)
 # Route that will return recent tweets
@@ -143,21 +147,20 @@ def sales(cmp):
 #Route that adds up Retweets by company 
 @app.route("/retwtcnt/<cmp>/")
 def retwtcnt(cmp):
-
-    print ("In Retweet Count Agg - test " + cmp)
+    
     #Aggregate from Mongodb
     tweets_rec = list(mongo.db.tweets.aggregate(
                  [ 
                     { "$match": { 'id': cmp } },
-                    { "$group": { '_id': 'null' , "No_of_Retweets": { "$sum": "$retweet_count" } } }
+                    { "$group": { '_id': 'null' , "No_of_Retweets": { "$sum": "$retweet_count" } } },
+                    { "$sort" : { '_id' : -1 } }
                  ]
         ))
 
     retweets_list = []
 
     for tweet in tweets_rec:
-        retweets_list.append(tweet['No_of_Retweets'])
-        print(tweet)
+        retweets_list.append(tweet['No_of_Retweets'])        
 
     return_json =  { 
                      "company" : cmp , 
@@ -165,7 +168,7 @@ def retwtcnt(cmp):
                    }
 
     #Return json 
-    print (jsonify(return_json))
+    #print (jsonify(return_json))
 
     return jsonify(return_json)
 if __name__ == "__main__":
