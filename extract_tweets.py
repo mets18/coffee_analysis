@@ -99,8 +99,8 @@ for x in search_list:
 # Display items in MongoDB collection
 tweet_recs = db.tweets.find()
 
-for tweet in tweet_recs:
-    print(tweet)
+#for tweet in tweet_recs:
+#    print(tweet)
 
 db.tweets.count() 
 
