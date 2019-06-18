@@ -11,7 +11,7 @@ Our proposal is to analyze key retail competitors in the coffee sales business, 
 
 ## Instructions for Running the App
 1.  Run 'python import.py' from the root directory to import data from revenue and storecount csv file.
-2.  Run 'extract_tweets.py' also from the root directory to scrape twitter.
+2.  Run 'python extract_tweets.py' also from the root directory to scrape twitter.
 3.  Run 'python app.py' file to start the app and go to browser.
 
 ## Links to Datasets
