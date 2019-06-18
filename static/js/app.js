@@ -1,5 +1,5 @@
    // Plot Tweets Count and publish in tweets div 
-  function buildTweets(company) {
+function buildTweets(company) {
 
     console.log(`Company Selected in buildTweets : ` + company); 
   
@@ -9,7 +9,7 @@
   
     d3.json(url).then(function(data){
   
-      console.log(data);
+      // console.log(data);
         
       var data2 = [{
         x: data["sentiments"],
@@ -36,7 +36,7 @@ function buildReTweets(company) {
   
     d3.json(url).then(function(data){
   
-      console.log(data);
+      // console.log(data);
         
       // var data2 = [{
       //   x: data["sentiments"],
@@ -64,9 +64,9 @@ function buildReTweets(company) {
   });
 }
   // Get Sample Tweets and disply on dashboard
-  function buildMetadata(company) {
+function buildMetadata(company) {
 
-      console.log(`Company Selected in buildMetadata : ` + company); 
+      // console.log(`Company Selected in buildMetadata : ` + company); 
 
       url=`/metadata/`+company;
 
@@ -99,7 +99,7 @@ function buildReTweets(company) {
   }
 
  // Plot Rating Counts and publish in rating div 
-  function buildRating(company) {
+function buildRating(company) {
   
     console.log(`Company Selected in buildRating : ` + company); 
   
@@ -109,7 +109,7 @@ function buildReTweets(company) {
   
     d3.json(url).then(function(data){
   
-      console.log(data);
+      // console.log(data);
         
       var data2 = [{
         values: data["ratings"],       
@@ -178,7 +178,94 @@ function buildStores(company) {
     });
 
 }
-  
+
+function buildGauge(company) {
+
+  console.log(`Retweet Count Gauge : ` + company); 
+
+  url=`/retwtcnt/`+company;
+
+  console.log(url);
+
+  d3.json(url).then(function(data){
+
+    console.log(`Gauge Data Num of Retweet : ` + data["retweet_count"]);
+
+    var level = data["retweet_count"] / 100000;
+    
+    // Trig to calc meter point
+    var degrees = 10 - level,
+        radius = .5;
+    var radians = degrees * Math.PI / 10;
+    var x = radius * Math.cos(radians);
+    var y = radius * Math.sin(radians);
+
+    // Path: may have to change to create a better triangle
+    var mainPath = 'M -.0 -0.025 L .0 0.025 L ',
+        pathX = String(x),
+        space = ' ',
+          pathY = String(y),
+      pathEnd = ' Z';
+
+    var path = mainPath.concat(pathX,space,pathY,pathEnd);
+
+    var data3 = [{ type: 'scatter',
+      x: [0], y:[0],
+      marker: {size: 28, color:'850000'},
+        showlegend: false,
+        name: 'Retweet Counts : ',
+        text: data["retweet_count"],
+        hoverinfo: 'name+text'},
+        { values: [50/10, 50/10, 50/10, 50/10, 50/10, 50/10, 50/10, 50/10, 50/10, 50/10,50],
+        
+        rotation: 90,
+        text: ['9-10', '8-9','7-8','6-7','5-6','4-5','3-4','2-3','1-2','0-1',''],
+        textinfo: 'text',
+        textposition:'inside',
+        marker: {colors:[
+                        'rgba(14, 127, 0, .5)', 
+                        'rgba(20, 130, 8, .5)',
+                        'rgba(30, 140, 15, .5)',
+                        'rgba(70, 145, 20, .5)',
+                        'rgba(110, 154, 22, .5)',
+                        'rgba(170, 202, 42, .5)', 
+                        'rgba(202, 206, 95, .5)',
+                        'rgba(210, 209, 145, .5)',
+                        'rgba(232, 215, 175, .5)',
+                        'rgba(255, 230, 210, .5)',
+                        'rgba(255, 255, 255, 0)'
+                        ]
+                },
+        labels: ['9-10', '8-9','7-8','6-7','5-6','4-5','3-4','2-3','1-2','0-1',''],
+        hoverinfo: 'label',
+        hole: .5,
+        type: 'pie',
+        showlegend: false
+  }];
+
+      var layout3 = {
+        shapes:[{
+            type: 'path',
+            path: path,
+            fillcolor: '850000',
+            line: {
+              color: '850000'
+            }
+          }],
+        title: '<b>Gauge</b> <br> Retweets 0-10 in 100,000s',
+        height: 550,
+        width: 550,
+        xaxis: {zeroline:false, showticklabels:false,
+                  showgrid: false, range: [-1, 1]},
+        yaxis: {zeroline:false, showticklabels:false,
+                  showgrid: false, range: [-1, 1]}
+      };
+
+  Plotly.newPlot('gauge', data3, layout3);
+
+}); 
+
+}
   
   function init() {
 
@@ -205,24 +292,23 @@ function buildStores(company) {
         }                
 
       // Use the first Company (Starbucks) from the list to build the initial plots
-      const firstSample = companies[0].company;
+      const firstSample = companies[0].company;      
       buildTweets(firstSample);
       buildReTweets(firstSample);
+      buildGauge(firstSample);
       buildMetadata(firstSample);
       buildRating(firstSample);
       buildStores(firstSample);
-//  buildSales(firstSample);
-//     });
   }
   
   function optionChanged(newSample) {
-//     // Fetch new data each time a new sample is selected
+//     // Fetch new data each time a new sample is selected      
       buildTweets(newSample);
       buildReTweets(newSample);
+      buildGauge(newSample);
       buildMetadata(newSample);
       buildRating(newSample);
       buildStores(newSample);
-//       buildSales(newSample);
   }
   
   // Initialize the dashboard

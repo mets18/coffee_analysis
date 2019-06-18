@@ -16,7 +16,7 @@ def home():
     # Find one record of data from the mongo database
     tweets_rec = mongo.db.tweets.find_one()
 
-    print(tweets_rec)
+    #print(tweets_rec)
    
     # Return index.html
     return render_template("index.html")
@@ -140,5 +140,33 @@ def sales(cmp):
 
    return jsonify(return_json)
 
+#Route that adds up Retweets by company 
+@app.route("/retwtcnt/<cmp>/")
+def retwtcnt(cmp):
+
+    print ("In Retweet Count Agg - test " + cmp)
+    #Aggregate from Mongodb
+    tweets_rec = list(mongo.db.tweets.aggregate(
+                 [ 
+                    { "$match": { 'id': cmp } },
+                    { "$group": { '_id': 'null' , "No_of_Retweets": { "$sum": "$retweet_count" } } }
+                 ]
+        ))
+
+    retweets_list = []
+
+    for tweet in tweets_rec:
+        retweets_list.append(tweet['No_of_Retweets'])
+        print(tweet)
+
+    return_json =  { 
+                     "company" : cmp , 
+                     "retweet_count" : retweets_list
+                   }
+
+    #Return json 
+    print (jsonify(return_json))
+
+    return jsonify(return_json)
 if __name__ == "__main__":
     app.run(debug=True)
