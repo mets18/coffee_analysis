@@ -14,7 +14,14 @@ function buildTweets(company) {
       var data2 = [{
         x: data["sentiments"],
         y: data["ratings"], 
-        hovertext: data["company"],
+        hovertext: data["company"],                
+        'marker': {
+          'color': [
+            'rgb(0, 204, 0)',    // green
+            'rgb(11, 133, 215)', // light blue
+            'rgb(215, 11, 11)'   // red                   
+            ]
+        },
         type: "bar"
       }];
     
@@ -46,14 +53,18 @@ function buildReTweets(company) {
       // }];
     
       // var layout2={ title: '<b>Bar Chart - </b> Retweets'};
-    
 
-
-              
       var data2 = [{
         values: data["retweets"],       
         labels: data["sentiments"],
-        hovertext: data["company"],
+        hovertext: data["company"],        
+        'marker': {
+          'colors': [
+            'rgb(0, 204, 0)',    // green
+            'rgb(11, 133, 215)', // light blue
+            'rgb(215, 11, 11)'   // red            
+            ]
+        },
         type: "pie"
       }];
     
@@ -84,8 +95,6 @@ function buildMetadata(company) {
   
       var metadata = d3.select('#recent-tweets');
 
-
-
       d3.json(url).then(function(data){
         
         d3.select('#company-head').selectAll("h3").remove();
@@ -104,7 +113,7 @@ function buildRating(company) {
     console.log(`Company Selected in buildRating : ` + company); 
   
     url=`/rating/`+company;
-  
+
     console.log(url);
   
     d3.json(url).then(function(data){
@@ -115,6 +124,13 @@ function buildRating(company) {
         values: data["ratings"],       
         labels: data["sentiments"],
         hovertext: data["company"],
+        'marker': {
+          'colors': [
+            'rgb(0, 204, 0)',    // green
+            'rgb(11, 133, 215)', // light blue
+            'rgb(215, 11, 11)'   // red         
+            ]
+        },
         type: "pie"
       }];
     
